@@ -1,9 +1,16 @@
 package p1;
 
+import controllers.PetController;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import models.PetModel;
+import models.PetNotFoundModel;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
 
 public class Test1 {
 
@@ -27,6 +34,37 @@ public class Test1 {
           /*  .extract().response()
             .prettyPrint();*/
    }
+
+   @Test
+   public void addNewPetTest(){
+      int testPetId = Integer.valueOf(RandomStringUtils.randomNumeric(5));
+      String testPetName = RandomStringUtils.randomAlphabetic(5);
+
+      PetModel testPet = new PetModel(testPetId, testPetName, null, new ArrayList<>(), new ArrayList<>(), "Available");
+      PetController petController = new PetController(testPet);
+      PetModel petResponse = petController.postNewPet();
+      Assert.assertEquals(petResponse,testPet);
+   }
+
+   @Test
+   public void deletePetTest(){
+      int testPetId = Integer.valueOf(RandomStringUtils.randomNumeric(5));
+      String testPetName = RandomStringUtils.randomAlphabetic(5);
+
+      PetNotFoundModel expectedResponse = new PetNotFoundModel(1,"error","Pet not found");
+
+      PetModel testPet = new PetModel(testPetId, testPetName, null, new ArrayList<>(), new ArrayList<>(), "Available");
+      PetController petController = new PetController(testPet);
+      PetModel petResponse = petController.postNewPet();
+      Assert.assertEquals(petResponse,testPet);
+      petController.deletePet();
+      PetNotFoundModel actualResponse = (PetNotFoundModel) petController.getPet();
+      Assert.assertEquals(actualResponse,expectedResponse);
+   }
+
+
+
+
 }
 
 

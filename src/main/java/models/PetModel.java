@@ -1,8 +1,15 @@
 package models;
 
 import java.util.List;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.annotation.Generated;
+
+@Generated("com.robohorse.robopojogenerator")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PetModel {
 
    @JsonProperty("id")
@@ -10,15 +17,19 @@ public class PetModel {
    @JsonProperty("name")
    private String name;
    @JsonProperty("category")
-   private String category;
+   private CategoryModel category;
    @JsonProperty("photoUrls")
    private List<String> photoUrls;
    @JsonProperty("tags")
-   private List<String> tags;
+   private List<TagModel> tags;
    @JsonProperty("status")
    private String status;
 
-   public PetModel(Integer id, String name, String category, List<String> photoUrls, List<String> tags, String status) {
+   public PetModel(){
+
+   }
+
+   public PetModel(Integer id, String name, CategoryModel category, List<String> photoUrls, List<TagModel> tags, String status) {
       this.id = id;
       this.name = name;
       this.category = category;
@@ -30,6 +41,7 @@ public class PetModel {
    public Integer getId() {
       return id;
    }
+
    public void setId(Integer id) {
       this.id = id;
    }
@@ -42,7 +54,15 @@ public class PetModel {
       this.name = name;
    }
 
-   public Object getPhotoUrls() {
+   public CategoryModel getCategory() {
+      return category;
+   }
+
+   public void setCategory(CategoryModel category) {
+      this.category = category;
+   }
+
+   public List<String> getPhotoUrls() {
       return photoUrls;
    }
 
@@ -50,11 +70,11 @@ public class PetModel {
       this.photoUrls = photoUrls;
    }
 
-   public Object getTags() {
+   public List<TagModel> getTags() {
       return tags;
    }
 
-   public void setTags(List<String> tags) {
+   public void setTags(List<TagModel> tags) {
       this.tags = tags;
    }
 
@@ -66,12 +86,33 @@ public class PetModel {
       this.status = status;
    }
 
-   public String getCategory() {
-      return category;
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      PetModel petModel = (PetModel) o;
+      return Objects.equals(id, petModel.id) &&
+            Objects.equals(name, petModel.name) &&
+            Objects.equals(category, petModel.category) &&
+            Objects.equals(photoUrls, petModel.photoUrls) &&
+            Objects.equals(tags, petModel.tags) &&
+            Objects.equals(status, petModel.status);
    }
 
-   public void setCategory(String category) {
-      this.category = category;
+   @Override
+   public int hashCode() {
+      return Objects.hash(id, name, category, photoUrls, tags, status);
    }
 
+   @Override
+   public String toString() {
+      return "PetModel{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", category=" + category.toString() +
+            ", photoUrls=" + photoUrls +
+            ", tags=" + tags +
+            ", status='" + status + '\'' +
+            '}';
+   }
 }
