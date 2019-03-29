@@ -1,35 +1,31 @@
 package controllers;
 
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import models.PetModel;
 import models.PetNotFoundModel;
+import static testdata.RequestSpecDataReader.*;
 
 import static io.restassured.RestAssured.given;
 
 public class PetController {
 
-   private PetModel pet;
 
-   public PetController(PetModel testPet){
+   public PetController(){
       RestAssured.requestSpecification =  new RequestSpecBuilder()
-            .setBaseUri("https://petstore.swagger.io/")
-            .setBasePath("/v2/pet")
-            .addHeader("api_key","1254527582752")
+            .setBaseUri(getBaseUri())
+            .setBasePath(getBasePath())
+            .addHeaders(getBaseHeader())
             .log(LogDetail.ALL)
             .setContentType(ContentType.JSON).build();
-      /*RestAssured.responseSpecification = new ResponseSpecBuilder()
-            .expectContentType(ContentType.JSON)
-            .log(LogDetail.ALL)
-            .build();*/
-      this.pet = testPet;
    }
 
-   public PetModel postNewPet(){
+   @Step("POST pet with body: {0}")
+   public PetModel postNewPet(PetModel pet){
       return given().body(pet)
             .when().post()
             .then()
@@ -38,12 +34,14 @@ public class PetController {
             .as(PetModel.class);
    }
 
-   public void deletePet (){
-      given().delete(String.valueOf(pet.getId()));
+   @Step("DELETE pet with id: {0}")
+   public void deletePetById (int petId) {
+      given().delete(String.valueOf(petId));
    }
 
-   public Object getPet(){
-      Response response = given().get(String.valueOf(pet.getId()));
+   @Step("GET pet with id: {0}")
+   public Object getPetById (int petId){
+      Response response = given().get(String.valueOf(petId));
 
       if(response.statusCode() == 200){
          return response.as(PetModel.class);
@@ -52,7 +50,8 @@ public class PetController {
       }
    }
 
-   public PetModel updatePet() {
+   @Step("UPDATE pet with dody: {0}")
+   public PetModel updatePet(PetModel pet) {
       return given()
             .body(pet)
             .put().as(PetModel.class);

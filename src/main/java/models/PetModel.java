@@ -109,7 +109,7 @@ public class PetModel {
       return "PetModel{" +
             "id=" + id +
             ", name='" + name + '\'' +
-            ", category=" + category.toString() +
+            ", category=" + category +
             ", photoUrls=" + photoUrls +
             ", tags=" + tags +
             ", status='" + status + '\'' +
